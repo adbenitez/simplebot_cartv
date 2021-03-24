@@ -111,38 +111,69 @@ def _get_channel(chan) -> str:
 
 
 class TestSendFile:
-    def test_cartv(self, mocker):
+    def test_cartv(self, mocker, requests_mock) -> None:
+        self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartv")
         assert msg.text
 
-    def test_cartvcv(self, mocker):
+    def test_cartvcv(self, mocker, requests_mock) -> None:
+        self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartvcv")
         assert msg.text
 
-    def test_cartvtr(self, mocker):
+    def test_cartvtr(self, mocker, requests_mock) -> None:
+        self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartvtr")
         assert msg.text
 
-    def test_cartved(self, mocker):
+    def test_cartved(self, mocker, requests_mock) -> None:
+        self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartved")
         assert msg.text
 
-    def test_cartved2(self, mocker):
+    def test_cartved2(self, mocker, requests_mock) -> None:
+        self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartved2")
         assert msg.text
 
-    def test_cartvmv(self, mocker):
+    def test_cartvmv(self, mocker, requests_mock) -> None:
+        self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartvmv")
         assert msg.text
 
-    def test_cartvcl(self, mocker):
+    def test_cartvcl(self, mocker, requests_mock) -> None:
+        self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartvcl")
         assert msg.text
 
-    def test_cartvca(self, mocker):
+    def test_cartvca(self, mocker, requests_mock) -> None:
+        self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartvca")
         assert msg.text
 
-    def test_cartvha(self, mocker):
+    def test_cartvha(self, mocker, requests_mock) -> None:
+        self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartvha")
         assert msg.text
+
+    def _requests_mock(self, requests_mock):
+        data = {
+            "Cubavisión": [
+                {
+                    "fecha_inicial": "2021-03-24",
+                    "hora_inicio":  "00:15:00",
+                    "titulo": "Example program",
+                    "descripcion": "Example description",
+                    "transmision": "Estreno",
+                }
+            ],
+        }
+        data["Tele Rebelde"] = data["Cubavisión"]
+        data["Educativo"] = data["Cubavisión"]
+        data["Educativo 2"] = data["Cubavisión"]
+        data["Multivisión"] = data["Cubavisión"]
+        data["Clave"] = data["Cubavisión"]
+        data["Caribe"] = data["Cubavisión"]
+        data["Habana"] = data["Cubavisión"]
+        for name, url in channels.items():
+            requests_mock.get(url, json=data[name])
