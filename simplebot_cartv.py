@@ -161,7 +161,7 @@ class TestSendFile:
             "Cubavisión": [
                 {
                     "fecha_inicial": "2021-03-24",
-                    "hora_inicio":  "00:15:00",
+                    "hora_inicio": "00:15:00",
                     "titulo": "Example program",
                     "descripcion": "Example description",
                     "transmision": "Estreno",
