@@ -2,7 +2,7 @@ import requests
 import simplebot
 from simplebot.bot import Replies
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 tv_emoji, cal_emoji, aster_emoji = "📺", "📆", "✳"
 channels = {
     name: "http://eprog2.tvcdigital.cu/programacion/" + code
