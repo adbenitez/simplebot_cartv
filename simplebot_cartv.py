@@ -110,7 +110,7 @@ def _get_channel(chan) -> str:
     return text
 
 
-class TestSendFile:
+class TestPlugin:
     def test_cartv(self, mocker, requests_mock) -> None:
         self._requests_mock(requests_mock)
         msg = mocker.get_one_reply("/cartv")
