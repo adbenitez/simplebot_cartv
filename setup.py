@@ -6,7 +6,7 @@ from setuptools import setup
 
 if __name__ == "__main__":
     MODULE_NAME = "simplebot_cartv"
-    DESC = "An example plugin for SimpleBot, a Delta Chat(http://delta.chat/) bot"
+    DESC = "Cartelera de la TV cubana (plugin para SimpleBot)"
 
     with open(MODULE_NAME + ".py") as fh:
         version = re.search(r"__version__ = \"(.*?)\"", fh.read(), re.M).group(1)
