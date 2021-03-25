@@ -37,7 +37,7 @@ if __name__ == "__main__":
         long_description_content_type="text/x-rst",
         author="The SimpleBot Contributors",
         author_email="adbenitez@nauta.cu, correaleyval@gmail.com",
-        url="https://github.com/simplebot-org/simplebot_cartv",
+        url="https://github.com/adbenitez/simplebot_cartv",
         keywords="simplebot plugin deltachat",
         license="MPL",
         classifiers=[

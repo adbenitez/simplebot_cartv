@@ -1,7 +1,7 @@
 Cartelera TV
 ============
 
-.. image:: https://img.shields.io/github/v/release/simplebot-org/simplebot_cartv
+.. image:: https://img.shields.io/github/v/release/adbenitez/simplebot_cartv
    :target: https://pypi.org/project/simplebot_cartv
 
 .. image:: https://img.shields.io/pypi/pyversions/simplebot_cartv.svg
@@ -10,8 +10,8 @@ Cartelera TV
 .. image:: https://pepy.tech/badge/simplebot_cartv
    :target: https://pepy.tech/project/simplebot_cartv
 
-.. image:: https://img.shields.io/github/license/simplebot-org/simplebot_cartv
-   :target: https://github.com/simplebot-org/simplebot_cartv/blob/master/LICENSE
+.. image:: https://img.shields.io/github/license/adbenitez/simplebot_cartv
+   :target: https://github.com/adbenitez/simplebot_cartv/blob/master/LICENSE
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
