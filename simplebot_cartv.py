@@ -2,7 +2,7 @@ import requests
 import simplebot
 from simplebot.bot import Replies
 
-__version__ = "1.0.2"
+__version__ = "1.1.0"
 tv_emoji, cal_emoji, aster_emoji = "📺", "📆", "✳"
 channels = {
     "cv": "Cubavisión",
