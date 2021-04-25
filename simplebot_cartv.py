@@ -5,29 +5,16 @@ from simplebot.bot import Replies
 __version__ = "1.0.2"
 tv_emoji, cal_emoji, aster_emoji = "📺", "📆", "✳"
 channels = {
-    name: "http://eprog2.tvcdigital.cu/programacion/" + code
-    for name, code in zip(
-        (
-            "Cubavisión",
-            "Tele Rebelde",
-            "Educativo",
-            "Educativo 2",
-            "Multivisión",
-            "Clave",
-            "Caribe",
-            "Habana",
-        ),
-        (
-            "5c096ea5bad1b202541503cf",
-            "596c6d34769cf31454a473aa",
-            "596c6d4f769cf31454a473ab",
-            "596c8107670d001588a8bfc1",
-            "597eed8948124617b0d8b23a",
-            "5a6a056c6c40dd21604965fd",
-            "5c5357124929db17b7429949",
-            "5c42407f4fa5d131ce00f864",
-        ),
-    )
+    "cv": "Cubavisión",
+    "cvi": "Cubavisión Internacional",
+    "cvplus": "Cubavisión Plus",
+    "tr": "Tele Rebelde",
+    "edu": "Educativo",
+    "edu2": "Educativo 2",
+    "mv": "Multivisión",
+    "clave": "Clave",
+    "caribe": "Caribe",
+    "chabana": "Canal Habana",
 }
 
 
@@ -40,66 +27,80 @@ def cartv(replies: Replies) -> None:
 @simplebot.command
 def cartvcv(replies: Replies) -> None:
     """Muestra la cartelera del canal Cubavisión."""
-    replies.add(text=_get_channel("Cubavisión"))
+    replies.add(text=_get_channel("cv"))
+
+
+@simplebot.command
+def cartvcvi(replies: Replies) -> None:
+    """Muestra la cartelera del canal Cubavisión Internacional."""
+    replies.add(text=_get_channel("cvi"))
+
+
+@simplebot.command
+def cartvcvp(replies: Replies) -> None:
+    """Muestra la cartelera del canal Cubavisión Plus."""
+    replies.add(text=_get_channel("cvplus"))
 
 
 @simplebot.command
 def cartvtr(replies: Replies) -> None:
     """Muestra la cartelera del canal Tele Rebelde."""
-    replies.add(text=_get_channel("Tele Rebelde"))
+    replies.add(text=_get_channel("tr"))
 
 
 @simplebot.command
 def cartved(replies: Replies) -> None:
     """Muestra la cartelera del canal Educativo."""
-    replies.add(text=_get_channel("Educativo"))
+    replies.add(text=_get_channel("edu"))
 
 
 @simplebot.command
 def cartved2(replies: Replies) -> None:
     """Muestra la cartelera del canal Educativo 2."""
-    replies.add(text=_get_channel("Educativo 2"))
+    replies.add(text=_get_channel("edu2"))
 
 
 @simplebot.command
 def cartvmv(replies: Replies) -> None:
     """Muestra la cartelera del canal Multivisión."""
-    replies.add(text=_get_channel("Multivisión"))
+    replies.add(text=_get_channel("mv"))
 
 
 @simplebot.command
 def cartvcl(replies: Replies) -> None:
     """Muestra la cartelera del canal Clave."""
-    replies.add(text=_get_channel("Clave"))
+    replies.add(text=_get_channel("clave"))
 
 
 @simplebot.command
 def cartvca(replies: Replies) -> None:
     """Muestra la cartelera del canal Caribe."""
-    replies.add(text=_get_channel("Caribe"))
+    replies.add(text=_get_channel("caribe"))
 
 
 @simplebot.command
 def cartvha(replies: Replies) -> None:
     """Muestra la cartelera del canal Habana."""
-    replies.add(text=_get_channel("Habana"))
+    replies.add(text=_get_channel("chabana"))
 
 
 def _get_channel(chan) -> str:
-    with requests.get(channels[chan]) as req:
+    url = "https://www.tvcubana.icrt.cu/cartv/{}/hoy.php".format(chan)
+    with requests.get(url) as req:
         req.raise_for_status()
         programs = req.json()
 
-    text = "{} {}\n".format(tv_emoji, chan)
+    text = "{} {}\n".format(tv_emoji, channels[chan])
     date = None
     for prog in programs:
-        if date != prog["fecha_inicial"]:
-            date = prog["fecha_inicial"]
+        date2, time = prog["eventInitialDateTime"].split("T")
+        time = time[:-3]
+        if date != date2:
+            date = date2
             text += "{} {}\n".format(cal_emoji, date)
-        time = prog["hora_inicio"][:-3]
-        title = " ".join(prog["titulo"].split())
-        desc = " ".join(prog["descripcion"].split())
-        trans = prog["transmision"].strip()
+        title = " ".join(prog["title"].split())
+        desc = " ".join(prog["description"].split())
+        trans = prog["transmission"].strip()
         text += "{} {} {}\n".format(
             aster_emoji, time, "/".join(e for e in (title, desc, trans) if e)
         )
@@ -112,68 +113,76 @@ def _get_channel(chan) -> str:
 
 class TestPlugin:
     def test_cartv(self, mocker, requests_mock) -> None:
-        self._requests_mock(requests_mock)
+        for chan in channels.keys():
+            self._requests_mock(requests_mock, chan)
         msg = mocker.get_one_reply("/cartv")
-        assert msg.text
+        for chan in channels.keys():
+            assert channels[chan] in msg.text
 
     def test_cartvcv(self, mocker, requests_mock) -> None:
-        self._requests_mock(requests_mock)
-        msg = mocker.get_one_reply("/cartvcv")
-        assert msg.text
+        chan = "cv"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartvcv").text
+
+    def test_cartvcvi(self, mocker, requests_mock) -> None:
+        chan = "cvi"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartvcvi").text
+
+    def test_cartvcvp(self, mocker, requests_mock) -> None:
+        chan = "cvplus"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartvcvp").text
 
     def test_cartvtr(self, mocker, requests_mock) -> None:
-        self._requests_mock(requests_mock)
-        msg = mocker.get_one_reply("/cartvtr")
-        assert msg.text
+        chan = "tr"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartvtr").text
 
     def test_cartved(self, mocker, requests_mock) -> None:
-        self._requests_mock(requests_mock)
-        msg = mocker.get_one_reply("/cartved")
-        assert msg.text
+        chan = "edu"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartved").text
 
     def test_cartved2(self, mocker, requests_mock) -> None:
-        self._requests_mock(requests_mock)
-        msg = mocker.get_one_reply("/cartved2")
-        assert msg.text
+        chan = "edu2"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartved2").text
 
     def test_cartvmv(self, mocker, requests_mock) -> None:
-        self._requests_mock(requests_mock)
-        msg = mocker.get_one_reply("/cartvmv")
-        assert msg.text
+        chan = "mv"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartvmv").text
 
     def test_cartvcl(self, mocker, requests_mock) -> None:
-        self._requests_mock(requests_mock)
-        msg = mocker.get_one_reply("/cartvcl")
-        assert msg.text
+        chan = "clave"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartvcl").text
 
     def test_cartvca(self, mocker, requests_mock) -> None:
-        self._requests_mock(requests_mock)
-        msg = mocker.get_one_reply("/cartvca")
-        assert msg.text
+        chan = "caribe"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartvca").text
 
     def test_cartvha(self, mocker, requests_mock) -> None:
-        self._requests_mock(requests_mock)
-        msg = mocker.get_one_reply("/cartvha")
-        assert msg.text
+        chan = "chabana"
+        self._requests_mock(requests_mock, chan)
+        assert channels[chan] in mocker.get_one_reply("/cartvha").text
 
-    def _requests_mock(self, requests_mock):
-        data = {
-            "Cubavisión": [
-                {
-                    "fecha_inicial": "2021-03-24",
-                    "hora_inicio": "00:15:00",
-                    "titulo": "Example program",
-                    "descripcion": "Example description",
-                    "transmision": "Estreno",
-                }
-            ],
-        }
-        data["Tele Rebelde"] = data["Cubavisión"]
-        data["Educativo"] = data["Cubavisión"]
-        data["Educativo 2"] = data["Cubavisión"]
-        data["Multivisión"] = data["Cubavisión"]
-        data["Clave"] = data["Cubavisión"]
-        data["Caribe"] = data["Cubavisión"]
-        data["Habana"] = data["Cubavisión"]
-        for name, url in channels.items():
-            requests_mock.get(url, json=data[name])
+    def _requests_mock(self, requests_mock, chan) -> None:
+        data = [
+            {
+                "title": "Example program",
+                "description": "Example description",
+                "eventInitialDateTime": "2021-04-25T00:19:00",
+                "transmission": "Estreno",
+            },
+            {
+                "title": "Example program 2",
+                "description": "Example description 2",
+                "eventInitialDateTime": "2021-04-26T00:10:00",
+                "transmission": "",
+            },
+        ]
+        url = "https://www.tvcubana.icrt.cu/cartv/{}/hoy.php"
+        requests_mock.get(url.format(chan), json=data)
