@@ -125,7 +125,7 @@ class TestPlugin:
         for chan in channels:
             self._requests_mock(requests_mock, chan)
         msg = mocker.get_one_reply("/cartv")
-        for chan in channels:
+        for chan in channels:  # noqa
             assert channels[chan] in msg.text
 
     def test_cartvcv(self, mocker, requests_mock) -> None:
