@@ -1,3 +1,5 @@
+"""Plugin's commands definition."""
+
 import requests
 import simplebot
 from pkg_resources import DistributionNotFound, get_distribution
@@ -26,7 +28,7 @@ channels = {
 @simplebot.command
 def cartv(replies: Replies) -> None:
     """Muestra la cartelera de todos los canales de la TV cubana."""
-    replies.add(text="\n\n".join(_get_channel(chan) for chan in channels.keys()))
+    replies.add(text="\n\n".join(_get_channel(chan) for chan in channels))
 
 
 @simplebot.command
@@ -117,11 +119,13 @@ def _get_channel(chan) -> str:
 
 
 class TestPlugin:
+    """Offline tests"""
+
     def test_cartv(self, mocker, requests_mock) -> None:
-        for chan in channels.keys():
+        for chan in channels:
             self._requests_mock(requests_mock, chan)
         msg = mocker.get_one_reply("/cartv")
-        for chan in channels.keys():
+        for chan in channels:
             assert channels[chan] in msg.text
 
     def test_cartvcv(self, mocker, requests_mock) -> None:
