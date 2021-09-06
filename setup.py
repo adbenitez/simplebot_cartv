@@ -23,7 +23,7 @@ if __name__ == "__main__":
     MODULE_NAME = "simplebot_cartv"
     DESC = "Cartelera de la TV cubana (plugin para SimpleBot)"
 
-    with open("README.rst") as fh:
+    with open("README.rst", encoding="utf-8") as fh:
         long_description = fh.read()
 
     setup(
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         description=DESC,
         long_description=long_description,
         long_description_content_type="text/x-rst",
-        author="The SimpleBot Contributors",
+        author="adbenitez",
         author_email="adbenitez@nauta.cu, correaleyval@gmail.com",
         url=f"https://github.com/adbenitez/{MODULE_NAME}",
         keywords="simplebot plugin deltachat",
