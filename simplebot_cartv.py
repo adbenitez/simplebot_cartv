@@ -95,24 +95,24 @@ def cartvha(replies: Replies) -> None:
 
 
 def _get_channel(chan) -> str:
-    url = "https://www.tvcubana.icrt.cu/cartv/{}/hoy.php".format(chan)
+    url = f"https://www.tvcubana.icrt.cu/cartv/{chan}/hoy.php"
     with session.get(url) as req:
         req.raise_for_status()
         programs = req.json()
 
-    text = "{} {}\n".format(tv_emoji, channels[chan])
+    text = f"{tv_emoji} {channels[chan]}\n"
     date = None
     for prog in programs:
         date2, time = prog["eventInitialDateTime"].split("T")
         time = time[:-3]
         if date != date2:
             date = date2
-            text += "{} {}\n".format(cal_emoji, date)
+            text += f"{cal_emoji} {date}\n"
         title = " ".join(prog["title"].split())
         desc = " ".join(prog["description"].split())
         trans = prog["transmission"].strip()
-        text += "{} {} {}\n".format(
-            aster_emoji, time, "/".join(e for e in (title, desc, trans) if e)
+        text += (
+            f"{aster_emoji} {time} {'/'.join(e for e in (title, desc, trans) if e)}\n"
         )
 
     if not programs:
@@ -196,5 +196,6 @@ class TestPlugin:
                 "transmission": "",
             },
         ]
-        url = "https://www.tvcubana.icrt.cu/cartv/{}/hoy.php"
-        requests_mock.get(url.format(chan), json=data)
+        requests_mock.get(
+            f"https://www.tvcubana.icrt.cu/cartv/{chan}/hoy.php", json=data
+        )
