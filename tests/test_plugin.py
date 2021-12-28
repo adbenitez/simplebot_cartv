@@ -1,5 +1,6 @@
 from simplebot_cartv import channels
 
+
 class TestPlugin:
     """Offline tests"""
 
